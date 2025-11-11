@@ -1,4 +1,5 @@
 # midir-method — Procedimiento reproducible de búsqueda de exceso térmico mid-IR (300–600 K)
+[![DOI](https://doi.org/10.5281/zenodo.17579731))
 
 **Resumen.** Este paquete proporciona un **método reproducible** para identificar **exceso térmico liso** (300–600 K) en el **mid‑IR** usando archivos públicos: **Gaia DR3**, **AllWISE** (vía cruce oficial en Gaia), **CatWISE2020** (opcional, VizieR/XMatch) y **NEOWISE‑R** (IRSA). Es **método‑primero**: incluye pipeline, modelos SED mínimos (M0/M1/M2), comparación bayesiana aproximada (BIC→lnZ), indicadores de calidad (**IWI**) y verificación con inyección‑recuperación sintética. **No** entrega un catálogo cosmológico ni resultados astrofísicos definitivos.
 
