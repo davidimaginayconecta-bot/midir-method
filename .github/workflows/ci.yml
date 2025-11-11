@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -l {0}   # activa conda en cada step
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,13 +19,9 @@ jobs:
         with:
           activate-environment: midir-method
           environment-file: env.yml
-          python-version: "3.10"
           auto-activate-base: false
           use-mamba: true
-          condarc-file: |
-            channels:
-              - conda-forge
-            channel_priority: strict
+          python-version: "3.10"
 
       - name: Show environment
         run: |
@@ -36,9 +32,7 @@ jobs:
 
       - name: Sanity imports
         run: |
-          python -c "import importlib,sys; \
-          [importlib.import_module(m) for m in ['src.io.loader','src.sed.models','src.fit.bic','src.score.iwi','src.vetting.tree']]; \
-          print('Imports OK')"
+          python -c "import importlib; [importlib.import_module(m) for m in ['src.io.loader','src.sed.models','src.fit.bic','src.score.iwi','src.vetting.tree']]; print('Imports OK')"
 
       - name: Run demo notebook (nbconvert)
         run: |
