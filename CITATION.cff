@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: midir-method
+message: If you use this software, please cite the DOI release.
+authors:
+  - family-names: Gutierrez Ule  
+    given-names: David
+license: MIT
+doi: 10.5281/zenodo.xxxxxx
