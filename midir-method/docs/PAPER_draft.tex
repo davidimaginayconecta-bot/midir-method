@@ -1,0 +1,69 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{authblk}
+
+\title{A Reproducible Method to Search for Smooth Mid-IR Waste-Heat Excess (300--600 K)}
+\author[1]{First A. Author}
+\author[2]{Second B. Collaborator}
+\affil[1]{Institute A}
+\affil[2]{Institute B}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a fully reproducible, method-first pipeline to search for smooth mid-infrared excess (300--600\,K) in nearby stellar sources using public archives (Gaia DR3, AllWISE, CatWISE2020, NEOWISE-R). We describe data ingestion, quality filters, SED models (photosphere, greybody, smooth blackbody), Bayesian model comparison via BIC, and an integrated evidence index (IWI). We provide a community replication plan and packaging (ADQL, code, notebooks). This is a \textit{method} paper; we do not claim astrophysical results.
+\end{abstract}
+
+\section{Introduction \& Motivation}
+Partial Dyson-like waste heat could appear as a smooth mid-IR excess over stellar photospheres. Public surveys (Gaia, WISE/NEOWISE) enable all-sky searches. Prior work has highlighted the utility of W3/W4 bands for warm dust and engineered waste-heat hypotheses. We aim to provide a transparent, scalable method.
+
+\section{Data \& Public Archives}
+We use Gaia DR3 for astrometry/photometry and effective temperatures; AllWISE for W1--W4 photometry via the official Gaia crossmatch; CatWISE2020 (optional) for updated W1/W2; NEOWISE-R single-exposure photometry for variability summaries (median and scatter). Exact ADQL and selection are packaged (see repo).
+
+\section{Method}
+\subsection{Ingestion \& Quality Filters}
+Control volumes by parallax thresholds (50/200/300 pc). Quality: \texttt{parallax\_over\_error>10}, \texttt{ruwe<1.4}. WISE quality: \texttt{w3snr,w4snr≥5}, \texttt{cc\_flags[W3,W4]='0'}, \texttt{ext\_flg=0}, optional $|b|≥8^\circ$ first pass.
+
+\subsection{SED Models and Comparison}
+We consider M0 (photosphere), M1 (photosphere + greybody, $\beta\in[1,2]$), and M2 (photosphere + smooth BB, $\beta=0$, $T_w\in[250,800]$\,K). We fit linear scales for star and excess over a grid in $T_w$. For $n$ data points and $k$ parameters,
+\[
+\chi^2=\sum_i\left[\frac{F_i^{\rm obs}-F_i^{\rm mod}}{\sigma_i}\right]^2,\quad
+\mathrm{BIC}=k\ln n+\chi^2,\quad \ln Z\approx -\tfrac{1}{2}\mathrm{BIC}.
+\]
+We adopt $\Delta\ln Z>5$ and $0.01\le f_D\le 0.5$ as acceptance.
+
+\subsection{Energy Check and Fractional Luminosity}
+With model linear scales $S_\star$ and $S_d$, we estimate $f_D\approx (S_d/S_\star)(T_w/T_\star)^4$ and require $f_D$ to be plausible. We also define an area $A=f_D L_\star/(\sigma T_w^4)$ as a sanity metric.
+
+\subsection{IWI: Integrated Weight of Evidence}
+\[
+\mathrm{IWI} = \sum_j w_j S_j, \quad
+(w_j)=(0.30,0.25,0.15,0.10,0.10,0.10)\ \text{renormalized}.
+\]
+Sub-scores: smoothness (W3--W4), preference for $\beta=0$, variability stability (NEOWISE-R), morphology/flags (AllWISE), energy plausibility, and context (YSO/AGN environment).
+
+\section{Validation}
+We design an injection--recovery test with 100 M2 injections ($T_w\in[300,600]$\,K, $f_D\in[0.01,0.3]$) and 100 controls (M0/M1), adding $\pm0.03$ mag photometric noise. We target FPR$<10\%$ and report recall at $\Delta\ln Z>5$.
+
+\section{Reproducibility \& Packaging}
+We provide ADQL queries (control volumes), Makefile, conda environment, modular code, and a demo notebook that runs on a sub-sample. Real-data instructions specify official sources only. The repository is designed for HEALPix sharding to facilitate distributed replication.
+
+\section{Call for Community Replication}
+We invite the community to claim HEALPix tiles, run the method, and contribute artifacts and logs for co-authorship. See the replication call for details.
+
+\appendix
+\section{ADQL and Thresholds}
+Exact ADQL for 50/200/300 pc, Gaia quality cuts, and WISE filters are included in the repo.
+
+\section{IWI Definitions and WISE Color Tree}
+We provide explicit sub-score formulas and color-based vetting tree for WISE morphology and extragalactic/YSO rejections.
+
+\section*{Acknowledgements}
+Gaia/ESA, CDS/VizieR, IRSA/IPAC, WISE/NEOWISE teams. This work uses only public archives and is intended as a method package.
+
+\end{document}
