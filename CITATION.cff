@@ -2,7 +2,22 @@ cff-version: 1.2.0
 title: midir-method
 message: If you use this software, please cite the DOI release.
 authors:
-  - family-names: Gutierrez Ule  
+  - family-names: Gutierrez Ule
     given-names: David
+    orcid: https://orcid.org/0009-0008-0438-4909
 license: MIT
-doi: 10.5281/zenodo.xxxxxx
+version: v1.0.0
+doi: https://doi.org/10.5281/zenodo.17579731
+repository-code: https://github.com/davidimaginayconecta-bot/midir-method
+date-released: 2025-11-11
+keywords:
+  - Gaia
+  - WISE
+  - NEOWISE
+  - SED
+  - infrared
+  - reproducibility
+  - waste heat
+  - mid-IR
+  - HEALPix
+Gutierrez Ule, D. (2025). midir-method (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.17579731
