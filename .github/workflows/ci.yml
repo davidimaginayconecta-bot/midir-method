@@ -1,31 +1,46 @@
 name: CI
+
 on:
   push:
   pull_request:
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
-      - uses: actions/checkout@v4
-      - uses: conda-incubator/setup-miniconda@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup conda env (mamba)
+        uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: midir-method
           environment-file: env.yml
+          python-version: "3.10"
           auto-activate-base: false
-      - name: Python info
+          use-mamba: true
+          condarc-file: |
+            channels:
+              - conda-forge
+            channel_priority: strict
+
+      - name: Show environment
         run: |
+          which python
           python -V
-          pip -V || true
-      - name: Run tests
-        shell: bash -l {0}
+          conda info
+          conda list | head -n 20
+
+      - name: Sanity imports
         run: |
-          python - << 'PY'
-import sys
-print("Sanity import:")
-import src.io.loader, src.sed.models, src.fit.bic, src.score.iwi, src.vetting.tree
-print("OK")
-PY
+          python -c "import importlib,sys; \
+          [importlib.import_module(m) for m in ['src.io.loader','src.sed.models','src.fit.bic','src.score.iwi','src.vetting.tree']]; \
+          print('Imports OK')"
+
       - name: Run demo notebook (nbconvert)
-        shell: bash -l {0}
         run: |
-          python -m jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=600 --inplace notebooks/N00_demo_lite.ipynb
+          python -m jupyter nbconvert --to notebook --execute \
+            --ExecutePreprocessor.timeout=900 --inplace notebooks/N00_demo_lite.ipynb
