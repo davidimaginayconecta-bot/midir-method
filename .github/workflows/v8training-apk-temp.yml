@@ -42,8 +42,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/v8training-src"
-          unzip -t .v8training-build/V8Training-1.0.0-source.zip
-          unzip -q .v8training-build/V8Training-1.0.0-source.zip -d "$RUNNER_TEMP/v8training-src"
+          cat .v8training-build/project.b64.* | base64 --decode > "$RUNNER_TEMP/V8Training-1.0.0-source.zip"
+          unzip -t "$RUNNER_TEMP/V8Training-1.0.0-source.zip"
+          unzip -q "$RUNNER_TEMP/V8Training-1.0.0-source.zip" -d "$RUNNER_TEMP/v8training-src"
           PROJECT_DIR="$(find "$RUNNER_TEMP/v8training-src" -name settings.gradle.kts -printf '%h\n' | head -n 1)"
           test -n "$PROJECT_DIR"
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
